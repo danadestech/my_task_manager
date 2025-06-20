@@ -62,7 +62,7 @@ st.markdown(
 )
 
 # Subtitle
-st.markdown("<div class='subtitle'>Stay ahead of your daily schedule with our Daily Task Manager</div>",
+st.markdown("<div class='subtitle'>Stay ahead of your daily schedule with our Daily Task Manager.</div>",
             unsafe_allow_html=True)
 
 
