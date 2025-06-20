@@ -1,5 +1,23 @@
 import streamlit as st
 from datetime import datetime
+import functions
+
+
+todos = functions.get_todos()
+
+def add_todo():
+    task = st.session_state["new_todo"].strip()
+    if not task:
+        return
+
+    if any(task.lower() == t.strip().lower() for t in todos):
+        st.warning("Schedule/task added already!")
+    else:
+        todos.append(task + "\n")
+        functions.write_todos(todos)
+        st.success("Task added!")
+
+    st.session_state["new_todo"] = ""  # Clear input box
 
 
 
@@ -26,10 +44,10 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Right-aligned date
+
 
 # Title
-st.title("Daily Task Manager")
+st.title("Daily Task Manager 📝")
 
 
 # Get current date and time
@@ -47,15 +65,30 @@ st.markdown(
 st.markdown("<div class='subtitle'>Stay ahead of your daily schedule with our Daily Task Manager</div>",
             unsafe_allow_html=True)
 
-# Instruction
-st.markdown("<div class='instruction'>Enter your daily schedule below with the box provided!</div>",
-            unsafe_allow_html=True)
 
-st.info("NOTE: Check the checkbox to mark any schedule completed and deleted from the list")
+st.write("----- ✍🏻 NOTE: Tick the checkbox ✔ to complete and delete a schedule/task. -----")
+st.write("")
+
+st.markdown(f"**🧮 You have `{len(todos)}` tasks for today.**")
+
+for index, todo in enumerate(todos):
+    checkbox = st.checkbox(todo, key=f"todo_{index}")
+    if checkbox:
+        todos.pop(index)
+        functions.write_todos(todos)
+        del st.session_state[f"todo_{index}"]
+        st.rerun()
+
+st.text_input(label="", placeholder="Add schedule or task ....", on_change=add_todo, key='new_todo')
 
 
 
-st.text_input(label=" ", placeholder="Add schedule or task ....")
+
+
+
+
+
+
 
 
 
